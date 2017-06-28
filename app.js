@@ -3,7 +3,10 @@ var mongoose = require('mongoose');
 var config = require('./config');
 
 
-mongoose.createConnection(config.dbConfigurationString());
+var something = mongoose.createConnection(config.dbConfigurationString());
+console.log('something', something);
+
+
 
 var app = express();
 var port = process.env.PORT || 2000;
