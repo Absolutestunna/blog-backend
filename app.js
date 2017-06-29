@@ -5,6 +5,8 @@ var app = express();
 
 //import Endpoints
 var setupSeedDataController = require('./controllers/setupController');
+var apiController = require('./controllers/apiController');
+
 
 var connection = mongoose.connect(config.getDbConnectionString());
 
@@ -34,6 +36,7 @@ var connection = mongoose.connect(config.getDbConnectionString());
 
 //   Endpoints   //
 // setupSeedDataController(app);
+apiController(app);
 
 
 // var port = process.env.PORT || 2000;
