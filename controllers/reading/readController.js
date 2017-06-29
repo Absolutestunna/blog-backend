@@ -1,4 +1,4 @@
-var Stories = require('../models/storyModel');
+var Stories = require('../../models/storyModel');
 var bodyParser = require('body-parser');
 
 
@@ -13,10 +13,8 @@ module.exports = function(app){
 
     //GET STORIES BASED ON PROFILE LOGGED IN
 
-
-
     //GET ALL THE STORIES
-    app.get('/api/stories/:uname', function(req, res){
+    app.get('/api/stories', function(req, res){
       Stories.find(function(err, stories){
 
         if(err) throw err;
@@ -36,18 +34,13 @@ module.exports = function(app){
     });
 
     //GET STORIES BY CATEGORY
-    app.get('/api/category/:topic', function(req, res){
-      Stories.find({ topic: req.params.topic }, function(err, stories){
+    app.get('/api/category/:cat', function(req, res){
+      Stories.find({ topic: req.params.cat }, function(err, stories){
 
         if(err) throw err;
 
         res.send(stories)
       })
     });
-
-
-
-
-
 
 }

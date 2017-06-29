@@ -6,8 +6,8 @@ var storySchema = new Schema({
   author: String,
   title: String,
   body: String,
-  topic: String
-  // date: { type: Date, default: Date.now },
+  topic: String,
+  createdAt: Date
 });
 
 var Stories = mongoose.model('Stories', storySchema);

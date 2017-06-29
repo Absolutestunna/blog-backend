@@ -5,12 +5,13 @@ var app = express();
 
 //import Endpoints
 var setupSeedDataController = require('./controllers/setupController');
-var apiController = require('./controllers/apiController');
+var apiController = require('./controllers/reading/readController');
 
 
 var connection = mongoose.connect(config.getDbConnectionString());
 
-
+// var db = mongoose.connection.db;
+// console.log('db', db);
 
 //check for populated collection
 
@@ -35,7 +36,7 @@ var connection = mongoose.connect(config.getDbConnectionString());
 // });
 
 //   Endpoints   //
-// setupSeedDataController(app);
+setupSeedDataController(app);
 apiController(app);
 
 
