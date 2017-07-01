@@ -1,16 +1,10 @@
-var Stories = require('../../models/storyModel');
+var Stories = require('../models/storyModel');
 var bodyParser = require('body-parser');
 
 
 module.exports = function(app){
 
-
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
-
-
     /*LATER*/
-
     //GET STORIES BASED ON PROFILE LOGGED IN
 
     //GET ALL THE STORIES
