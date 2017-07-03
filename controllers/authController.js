@@ -3,7 +3,6 @@ module.exports = function(app, passport){
 
   // process the signup form
   app.post('/api/signup', function(req, res, next) {
-
     passport.authenticate('local-signup', function(err, user, info) {
 
       if (err) {

@@ -4,7 +4,6 @@ var config = require('./config');
 var app = express();
 
 var passport = require('passport');
-var flash    = require('connect-flash');
 
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -19,7 +18,6 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(session({ secret: 'scotchbonetsarethebest' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-app.use(flash()); // use connect-flash for flash messages stored in session
 
 require('./config/passport')(passport); // pass passport for configuration
 
@@ -33,7 +31,9 @@ var authAPIController = require('./controllers/authController');
 //  require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 
-var connection = mongoose.connect(config.getDbConnectionString());
+var connection = mongoose.connect(config.getDbConnectionString(), function(err){
+  console.log('Could not connect to mongodb on mlab. Please ensure you are using the correct uri and ports are configured appropriately')
+});
 
 //   Endpoints   //
 // setupSeedDataController(app);
