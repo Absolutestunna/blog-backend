@@ -42,5 +42,5 @@ writeAPIController(app, passport);
 authAPIController(app, passport);
 
 
-var port = process.env.PORT || 5000;
+var port = process.env.PORT || 8080;
 app.listen(port);

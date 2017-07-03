@@ -1,6 +1,13 @@
 
 module.exports = function(app, passport){
 
+  // =====================================
+  // LOCAL ROUTES =======================
+  // =====================================
+  // send to google to do the authentication
+  // profile gets us their basic information including their name
+  // email gets their emails
+
   // process the signup form
   app.post('/api/signup', function(req, res, next) {
     passport.authenticate('local-signup', function(err, user, info) {
@@ -41,6 +48,35 @@ module.exports = function(app, passport){
         return res.send({ success : true, message : 'Authenticated' });
       });
     })(req, res, next);
+  });
+
+  // =====================================
+  // GOOGLE ROUTES =======================
+  // =====================================
+  // send to google to do the authentication
+  // profile gets us their basic information including their name
+  // email gets their emails
+
+  app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+
+  app.get('/auth/google/callback', function(req, res, next){
+    passport.authenticate('google', function(err, user, info){
+      if (err) {
+        return next(err); // will generate a 500 error
+      }
+
+      // Generate a JSON response reflecting authentication status
+      if (! user) {
+        return res.send(401, { success : false, message : info.message });
+      }
+
+      req.login(user, function(err){
+        if(err){
+          return next(err);
+        }
+          return res.send({ success : true, message : 'Authenticated' });
+      });
+    })(req, res, next);;
   });
 
 
