@@ -17,6 +17,7 @@ module.exports = function(app, passport){
 
       // process the signup form
       app.post('/api/signup', function(req, res, next) {
+
         passport.authenticate('local-signup', function(err, user, info) {
 
           if (err) {
@@ -64,10 +65,11 @@ module.exports = function(app, passport){
       // profile gets us their basic information including their name
       // email gets their emails
 
-      app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+      app.get('/auth/google', passport.authenticate('google', { session: false, scope : ['profile', 'email'] }));
 
       app.get('/auth/google/callback', function(req, res, next){
         passport.authenticate('google', function(err, user, info){
+          // console.log('info', info)
           if (err) {
             return next(err); // will generate a 500 error
           }
@@ -77,7 +79,7 @@ module.exports = function(app, passport){
             return res.send(401, { success : false, message : info.message });
           }
 
-          req.login(user, function(err){
+          req.login(user, { session: false }, function(err){
             if(err){
               return next(err);
             }
@@ -97,8 +99,9 @@ module.exports = function(app, passport){
         passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
 
       app.get('/auth/facebook/callback', function(req, res, next){
-        passport.authenticate('facebook', function(err, user, info){
-
+        passport.authenticate('facebook', { session: false }, function(err, user, info){
+          // console.log('req user', req)
+        //   console.log('info', info)
           if (err) {
             return next(err); // will generate a 500 error
           }
@@ -112,7 +115,7 @@ module.exports = function(app, passport){
             if(err){
               return next(err);
             }
-              return res.send({ success : true, message : 'Facebook Authenticated' });
+              return res.send({ success : true, message : 'Facebook Authenticated',userInfo: { email: user.facebook.email, id: user.id} });
           }); 
           
         })(req, res, next)
@@ -166,8 +169,6 @@ module.exports = function(app, passport){
 
   app.post('/connect/local', function(req, res, next){
     passport.authorize('local-signup', function(err, user, info) {
-      console.log('user', user)
-      console.log('req', req)
           if (err) {
             return next(err); // will generate a 500 error
           }
@@ -180,7 +181,7 @@ module.exports = function(app, passport){
             if(err){
               return next(err);
             }
-            return res.send({ success : true, message : 'New User created' });
+            return res.send({ success : true, message : 'Local Account connected' });
           });
         })(req, res, next);
   });
@@ -190,9 +191,8 @@ module.exports = function(app, passport){
   app.get('/connect/google', passport.authorize('google', { scope : ['profile', 'email'] }));
 
   // the callback after google has authorized the user
-  app.get('/connect/facebook/callback', function(req, res, next){
+  app.get('/connect/google/callback', function(req, res, next){
     passport.authorize('google', function(err, user, info){
-
       if (err) {
         return next(err); // will generate a 500 error
       }
@@ -206,7 +206,32 @@ module.exports = function(app, passport){
         if(err){
           return next(err);
         }
-          return res.send({ success : true, message : 'Account connected' });
+          return res.send({ success : true, message : 'Google Account connected' });
+      }); 
+      
+    })(req, res, next)
+  })
+
+  // send to facebook to do the authentication
+  app.get('/connect/facebook', passport.authorize('facebook'));
+
+  // the callback after google has authorized the user
+  app.get('/connect/facebook/callback', function(req, res, next){
+    passport.authorize('facebook', function(err, user, info){
+      if (err) {
+        return next(err); // will generate a 500 error
+      }
+
+      // Generate a JSON response reflecting authentication status
+      if (! user) {
+        return res.send(401, { success : false, message : info.message });
+      }
+
+      req.login(user, function(err){
+        if(err){
+          return next(err);
+        }
+          return res.send({ success : true, message : 'Facebook Account connected' });
       }); 
       
     })(req, res, next)
