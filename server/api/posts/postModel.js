@@ -18,7 +18,8 @@ var postSchema = new Schema({
   },
   categories: [{
     type: Schema.Types.ObjectId,
-    ref: 'category'
+    ref: 'category',
+    required: true
   }]
 });
 
