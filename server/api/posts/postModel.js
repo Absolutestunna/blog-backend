@@ -1,10 +1,8 @@
 var mongoose = require('mongoose');
-mongoose.Promise = global.Promise
-
-
 var Schema = mongoose.Schema;
 
-var postSchema = new Schema({
+
+var PostSchema = new Schema({
     author: {
         type: Schema.Types.ObjectId,
         ref: 'user'
@@ -14,15 +12,14 @@ var postSchema = new Schema({
         required: true,
         unique: true
     },
-    body: {
+    text: {
         type: String,
         required: true
     },
     categories: [{
         type: Schema.Types.ObjectId,
         ref: 'category',
-        required: true
     }]
 });
 
-module.exports = mongoose.model('posts', postSchema);
+module.exports = mongoose.model('post', PostSchema);

@@ -22,11 +22,11 @@ var posts = [
     { title: 'Why we switched to Go', text: 'go is dope' }
 ];
 
-var createDoc = function(Model, doc) {
+var createDoc = function(model, doc) {
     // console.log('MODEL', Model)
     // console.log('doc', doc)
     return new Promise(function(resolve, reject) {
-        new Model(doc).save(function(err, saved) {
+        new model(doc).save(function(err, saved) {
             // console.log('SAVED', saved)
             return err ? reject(err) : resolve(saved);
         });
@@ -53,24 +53,12 @@ var createUsers = function(data) {
         });
 };
 
-console.log('createUsers', createUsers)
-
 var createCategories = function(data) {
-    console.log('CATEGORIES data', data)
-    console.log('categories', categories)
     var promises = categories.map(function(category) {
         console.log('eachCATEGORY', category)
-
-        return new Promise(function(resolve, reject) {
-            new Category(category).save(function(err, saved) {
-                console.log('CATEGORY SAVED', saved)
-                return err ? reject(err) : resolve(saved);
-            });
-        });
-
-
-        // return createDoc(Category, category);
+        return createDoc(Category, category);
     });
+
     console.log('CATEGORIES PROMISES', promises)
     return Promise.all(promises)
         .then(function(categories) {
@@ -109,9 +97,9 @@ var createPosts = function(data) {
 
 
 cleanDB()
-    .then(createUsers())
-    .then(createCategories())
-    //     // .then(createPosts)
+    .then(createUsers)
+    .then(createCategories)
+    .then(createPosts)
     .catch(function(err) {
         console.log('ERR', err)
     });
